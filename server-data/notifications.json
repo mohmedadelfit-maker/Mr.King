@@ -1,6 +1,19 @@
 [
   {
     "type": "activation_request",
+    "title": "طلب تفعيل جهاز: فرع فرع التجمع الخامس",
+    "message": "طلب فرع (فرع التجمع الخامس) تفعيل الجهاز (BK-DEV-TEST-0001) - هاتف: 01100051593 - ملاحظات: جهاز الكاشير رقم 1",
+    "deviceId": "BK-DEV-TEST-0001",
+    "branchName": "فرع التجمع الخامس",
+    "phone": "01100051593",
+    "notes": "جهاز الكاشير رقم 1",
+    "id": "notif_1788531128217_2vhz4",
+    "timestamp": 1788531128217,
+    "read": true,
+    "status": "approved"
+  },
+  {
+    "type": "activation_request",
     "title": "طلب تفعيل جهاز: فرع فرع المعادي",
     "message": "طلب فرع (فرع المعادي) تفعيل الجهاز (BK-DEV-TEST-BRANCH-1) - هاتف: 01100051593 - ملاحظات: طلب تفعيل تجريبي",
     "deviceId": "BK-DEV-TEST-BRANCH-1",

@@ -156,15 +156,9 @@ export async function apiCheckLicense(deviceId?: string): Promise<DeviceLicenseI
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  // Check local Master PIN or offline approval overrides first
+  // Check if this specific device has logged in with Master PIN credentials
   try {
-    if (
-      finalId === 'BK-DEV-4F03-350F-151B' ||
-      localStorage.getItem(`bk_master_active_${finalId}`) === 'true'
-    ) {
-      // Clean up any stale pending status
-      localStorage.removeItem(`bk_device_status_${finalId}`);
-      localStorage.setItem(`bk_master_active_${finalId}`, 'true');
+    if (localStorage.getItem(`bk_master_active_${finalId}`) === 'true') {
       return {
         deviceId: finalId,
         status: 'active',
@@ -196,10 +190,15 @@ export async function apiCheckLicense(deviceId?: string): Promise<DeviceLicenseI
       if (res.ok) {
         const data = await res.json();
         if (data && data.success) {
-          if (data.status === 'active' || !data.isExpired || data.isMaster) {
+          if (data.status === 'active' || data.isMaster) {
             try {
               localStorage.removeItem(`bk_device_status_${finalId}`);
               localStorage.setItem(`bk_master_active_${finalId}`, 'true');
+            } catch {}
+          } else {
+            // When in trial, expired, or pending approval, ensure master bypass is not mistakenly active
+            try {
+              localStorage.removeItem(`bk_master_active_${finalId}`);
             } catch {}
           }
           if (data.trialExpiresAt) {

@@ -235,13 +235,13 @@ export const PaywallLockScreen: React.FC<PaywallLockScreenProps> = ({
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-orange-50 text-[#EA580C] border border-orange-200/60 mb-3 shadow-xs">
             <ShieldAlert className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            {isPending ? 'Activation Pending' : 'Device Activation Required'}
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+            {isPending ? 'طلب التفعيل قيد المراجعة' : 'انتهت الفترة التجريبية (5 دقائق)'}
           </h1>
-          <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+          <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
             {isPending
-              ? 'Your activation request has been transmitted. The system will unlock automatically upon Admin approval.'
-              : 'Submit your branch details below for instant one-click approval by the General Management.'}
+              ? 'تم إرسال طلب التفعيل بنجاح للمدير العام (م/ محمد عادل). النظام بانتظار تحديد مدة الصلاحية وسيقوم بفتح القفل فوراً وتلقائياً.'
+              : 'حصل هذا الجهاز على فترة تجريبية مجانية 5 دقائق. لإعادة تشغيل النظام، أرسل طلب التفعيل لتحدد لك الإدارة العامة مدة الترخيص.'}
           </p>
         </div>
 

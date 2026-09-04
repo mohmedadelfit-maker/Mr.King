@@ -1,48 +1,6 @@
 {
   "masterSecret": "bk_king_master_secret_425jkt7x0n",
   "defaultPriceEgp": 5000,
-  "devices": {
-    "BK-DEV-4F03-350F-151B": {
-      "deviceId": "BK-DEV-4F03-350F-151B",
-      "firstSeenAt": 1788449692056,
-      "trialDurationMs": 300000,
-      "trialExpiresAt": 1788449992056,
-      "isActivated": true,
-      "planType": "lifetime",
-      "lastSeenAt": 1788530385656,
-      "ip": "127.0.0.1",
-      "deviceName": "جهاز كمبيوتر — متصفح ويب",
-      "activationRequested": false,
-      "requestedAt": 1788530243629,
-      "requestedBranch": "wahat",
-      "requestedPhone": "01100051593",
-      "requestedNotes": "333",
-      "branchName": "wahat",
-      "clientName": "المدير العام (Master Admin)",
-      "phone": "01100051593",
-      "activatedAt": 1788450890329,
-      "licenseKey": "BK-APPROVED-MASTER-1993",
-      "licenseExpiresAt": 0,
-      "latitude": 29.987,
-      "longitude": 31.211,
-      "city": "Giza",
-      "country": "Egypt",
-      "address": "Giza, Egypt"
-    }
-  },
-  "licenses": {
-    "BK-APPROVED-151B-MTLPHEU1": {
-      "key": "BK-APPROVED-151B-MTLPHEU1",
-      "deviceId": "BK-DEV-4F03-350F-151B",
-      "clientName": "6666",
-      "planType": "monthly",
-      "priceEgp": 5000,
-      "createdAt": 1788450890329,
-      "expiresAt": 1791042890329,
-      "generatedBy": "M-King (Approval)",
-      "notes": "تم التفعيل عبر نظام الموافقة الفوري (شهر واحد (30 يوم))",
-      "usedAt": 1788450890329,
-      "isActive": true
-    }
-  }
+  "devices": {},
+  "licenses": {}
 }

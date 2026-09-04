@@ -239,31 +239,50 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({ onOpenManage
 
                     {/* Action Buttons for Pending Items */}
                     {isPending && (
-                      <div className="mt-2.5 pt-2 border-t border-amber-200/60 flex items-center gap-1.5 flex-wrap">
-                        <button
-                          type="button"
-                          disabled={actionInProgress === item.deviceId}
-                          onClick={() => handleQuickApprove(item.deviceId, item.branchName, '1_month')}
-                          className="flex-1 py-1.5 px-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-[10px] font-black transition-all cursor-pointer shadow-xs disabled:opacity-50"
-                        >
-                          تفعيل شهر
-                        </button>
-                        <button
-                          type="button"
-                          disabled={actionInProgress === item.deviceId}
-                          onClick={() => handleQuickApprove(item.deviceId, item.branchName, '1_year')}
-                          className="flex-1 py-1.5 px-2 bg-[#EA580C] hover:bg-[#C2410C] text-white rounded-lg text-[10px] font-black transition-all cursor-pointer shadow-xs disabled:opacity-50"
-                        >
-                          تفعيل سنة
-                        </button>
-                        <button
-                          type="button"
-                          disabled={actionInProgress === item.deviceId}
-                          onClick={() => handleQuickApprove(item.deviceId, item.branchName, 'lifetime')}
-                          className="py-1.5 px-2 bg-stone-900 hover:bg-black text-amber-300 rounded-lg text-[10px] font-black transition-all cursor-pointer shadow-xs disabled:opacity-50"
-                        >
-                          👑 دائم
-                        </button>
+                      <div className="mt-2.5 pt-2 border-t border-amber-200/60 space-y-1.5">
+                        <div className="text-[10px] font-bold text-stone-600">حدد مدة التفعيل الممنوحة لهذا الجهاز:</div>
+                        <div className="grid grid-cols-3 sm:grid-cols-5 gap-1">
+                          <button
+                            type="button"
+                            disabled={actionInProgress === item.deviceId}
+                            onClick={() => handleQuickApprove(item.deviceId, item.branchName, '1_month')}
+                            className="py-1.5 px-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-[10px] font-black transition-all cursor-pointer shadow-xs disabled:opacity-50 text-center"
+                          >
+                            شهر (30 يوم)
+                          </button>
+                          <button
+                            type="button"
+                            disabled={actionInProgress === item.deviceId}
+                            onClick={() => handleQuickApprove(item.deviceId, item.branchName, '3_months' as any)}
+                            className="py-1.5 px-1.5 bg-amber-700 hover:bg-amber-800 text-white rounded-lg text-[10px] font-black transition-all cursor-pointer shadow-xs disabled:opacity-50 text-center"
+                          >
+                            3 أشهر
+                          </button>
+                          <button
+                            type="button"
+                            disabled={actionInProgress === item.deviceId}
+                            onClick={() => handleQuickApprove(item.deviceId, item.branchName, '6_months' as any)}
+                            className="py-1.5 px-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-[10px] font-black transition-all cursor-pointer shadow-xs disabled:opacity-50 text-center"
+                          >
+                            6 أشهر
+                          </button>
+                          <button
+                            type="button"
+                            disabled={actionInProgress === item.deviceId}
+                            onClick={() => handleQuickApprove(item.deviceId, item.branchName, '1_year')}
+                            className="py-1.5 px-1.5 bg-[#EA580C] hover:bg-[#C2410C] text-white rounded-lg text-[10px] font-black transition-all cursor-pointer shadow-xs disabled:opacity-50 text-center"
+                          >
+                            ⭐ سنة كاملة
+                          </button>
+                          <button
+                            type="button"
+                            disabled={actionInProgress === item.deviceId}
+                            onClick={() => handleQuickApprove(item.deviceId, item.branchName, 'lifetime')}
+                            className="py-1.5 px-1.5 bg-stone-900 hover:bg-black text-amber-300 rounded-lg text-[10px] font-black transition-all cursor-pointer shadow-xs disabled:opacity-50 text-center"
+                          >
+                            👑 دائم
+                          </button>
+                        </div>
                       </div>
                     )}
 
