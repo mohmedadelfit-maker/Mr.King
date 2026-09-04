@@ -4,6 +4,7 @@ import { BurgerKingLogo, TalabatLogo } from './BrandLogos';
 import { generateReconciliationPDFBlob } from '../utils/pdfExport';
 import { ComparisonRow, ReconciliationSummary, ExcelPaymentSummary, UserAccount, DeviceLicenseInfo } from '../types';
 import { ExportModal } from './ExportModal';
+import { NotificationBell } from './NotificationBell';
 
 interface HeaderProps {
   onReset: () => void;
@@ -99,6 +100,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Logged in User Pill or Admin Login Button */}
             <div className="lg:hidden flex items-center gap-2">
+              <NotificationBell onOpenManageLicenses={onOpenProfile} />
               {currentUser ? (
                 <div className="flex items-center gap-1.5">
                   {onOpenProfile && (
@@ -138,6 +140,11 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Action Controls & User status */}
           <div className="flex items-center gap-2 w-full lg:w-auto justify-end flex-wrap">
+            {/* Real-time Notifications Bell for pending activations */}
+            <div className="hidden sm:flex items-center mr-1">
+              <NotificationBell onOpenManageLicenses={onOpenProfile} />
+            </div>
+
             {/* Logged in User Pill or Admin Login Button */}
             {currentUser ? (
               <div className="hidden sm:flex items-center gap-2 pr-2 border-l border-stone-200 mr-1">

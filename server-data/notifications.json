@@ -1,0 +1,15 @@
+[
+  {
+    "type": "activation_request",
+    "title": "طلب تفعيل جهاز: فرع فرع المعادي",
+    "message": "طلب فرع (فرع المعادي) تفعيل الجهاز (BK-DEV-TEST-BRANCH-1) - هاتف: 01100051593 - ملاحظات: طلب تفعيل تجريبي",
+    "deviceId": "BK-DEV-TEST-BRANCH-1",
+    "branchName": "فرع المعادي",
+    "phone": "01100051593",
+    "notes": "طلب تفعيل تجريبي",
+    "id": "notif_1788530554531_8ut0z",
+    "timestamp": 1788530554531,
+    "read": true,
+    "status": "approved"
+  }
+]

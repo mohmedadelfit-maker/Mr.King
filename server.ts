@@ -232,6 +232,108 @@ async function sendOtpEmail(toEmail: string, otpCode: string): Promise<boolean> 
   }
 }
 
+// ==================== SYSTEM NOTIFICATIONS & EMAIL ALERTS ====================
+
+const NOTIFICATIONS_FILE = path.join(DATA_DIR, 'notifications.json');
+const ADMIN_NOTIFICATION_EMAILS = ['mohmedadelfit@gmail.com', '0kingold0@gmail.com'];
+
+export interface AdminNotification {
+  id: string;
+  type: 'activation_request' | 'device_approved' | 'license_expired' | 'security_alert';
+  title: string;
+  message: string;
+  deviceId: string;
+  branchName: string;
+  phone?: string;
+  notes?: string;
+  timestamp: number;
+  read: boolean;
+  status: 'pending' | 'approved' | 'dismissed';
+}
+
+function getAdminNotifications(): AdminNotification[] {
+  try {
+    if (!fs.existsSync(NOTIFICATIONS_FILE)) {
+      return [];
+    }
+    const data = fs.readFileSync(NOTIFICATIONS_FILE, 'utf-8');
+    return JSON.parse(data);
+  } catch {
+    return [];
+  }
+}
+
+function saveAdminNotifications(list: AdminNotification[]): void {
+  try {
+    fs.writeFileSync(NOTIFICATIONS_FILE, JSON.stringify(list, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Failed saving notifications', err);
+  }
+}
+
+function addAdminNotification(item: Omit<AdminNotification, 'id' | 'timestamp' | 'read' | 'status'>): AdminNotification {
+  const list = getAdminNotifications();
+  const notification: AdminNotification = {
+    ...item,
+    id: 'notif_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+    timestamp: Date.now(),
+    read: false,
+    status: 'pending',
+  };
+  list.unshift(notification);
+  saveAdminNotifications(list.slice(0, 100));
+  console.log('🔔 [NEW ADMIN NOTIFICATION ADDED]:', notification.title, item.deviceId);
+  return notification;
+}
+
+async function sendActivationNotificationEmail(details: {
+  deviceId: string;
+  branchName: string;
+  phone?: string;
+  notes?: string;
+  location?: string;
+  city?: string;
+  country?: string;
+}): Promise<boolean> {
+  const recipients = ADMIN_NOTIFICATION_EMAILS;
+  try {
+    const transporter = await createMailTransporter();
+    const info = await transporter.sendMail({
+      from: '"منظومة برجر كينج وطلبات" <security@burgerking-audit.local>',
+      to: recipients.join(', '),
+      subject: `🚨 إشعار عاجل: طلب تفعيل جهاز جديد — فرع ${details.branchName || 'برجر كينج'}`,
+      text: `مرحباً م/ محمد عادل،\nتم استلام طلب تفعيل جديد لمنظومة برجر كينج:\nاسم الفرع: ${details.branchName}\nرقم الهاتف: ${details.phone || 'غير مسجل'}\nمعرّف الجهاز (Hardware ID): ${details.deviceId}\nملاحظات: ${details.notes || 'لا يوجد'}\nيمكنك الاعتماد فوراً عبر المنظومة أو إدخال الرمز السري: 1993.`,
+      html: `
+        <div style="font-family: Arial, sans-serif; direction: rtl; text-align: right; padding: 25px; background: #fffcf9; border: 2px solid #EA580C; border-radius: 16px; max-width: 550px; margin: auto;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="color: #EA580C; margin: 0; font-size: 22px;">👑 إشعار طلب تفعيل جهاز جديد</h2>
+            <p style="color: #666; font-size: 13px; margin-top: 5px;">منظومة مطابقة الحسابات — برجر كينج & طلبات مصر</p>
+          </div>
+          
+          <div style="background: #ffffff; border: 1px solid #fed7aa; border-radius: 12px; padding: 18px; margin-bottom: 18px;">
+            <p style="font-size: 15px; margin: 8px 0; color: #333;">🏢 <strong>اسم الفرع:</strong> <span style="color: #C2410C; font-weight: bold; font-size: 16px;">${details.branchName}</span></p>
+            <p style="font-size: 15px; margin: 8px 0; color: #333;">📱 <strong>رقم الهاتف / واتساب:</strong> <span style="font-family: monospace; font-weight: bold;">${details.phone || 'غير مسجل'}</span></p>
+            <p style="font-size: 14px; margin: 8px 0; color: #333;">💻 <strong>معرّف الجهاز (Hardware ID):</strong> <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: bold;">${details.deviceId}</code></p>
+            ${details.location || details.city ? `<p style="font-size: 14px; margin: 8px 0; color: #333;">📍 <strong>الموقع الجغرافي:</strong> ${details.location || `${details.city || ''}, ${details.country || ''}`}</p>` : ''}
+            ${details.notes ? `<p style="font-size: 14px; margin: 8px 0; color: #333;">📝 <strong>ملاحظات الفرع:</strong> ${details.notes}</p>` : ''}
+            <p style="font-size: 12px; margin: 8px 0; color: #64748b;">⏱️ <strong>توقيت الطلب:</strong> ${new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Cairo' })}</p>
+          </div>
+
+          <div style="background: #502314; color: #FDB813; text-align: center; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 14px;">
+            ✅ للاعتماد الفوري: افتح لوحة تحكم المنظومة واضغط على جرس الإشعارات أو "اعتماد وتفعيل"<br/>
+            أو تفعيل فوري للجهاز برمز الإدارة السريع: <strong>1993</strong>
+          </div>
+        </div>
+      `,
+    });
+    console.log('✅ Activation notification email successfully dispatched to', recipients, 'MessageId:', info?.messageId);
+    return true;
+  } catch (err) {
+    console.error('Failed to send activation email:', err);
+    return false;
+  }
+}
+
 // ==================== AUTH API ROUTES ====================
 
 // 1. Check Server Status
@@ -1383,9 +1485,31 @@ app.post('/api/license/request-activation', (req, res) => {
 
   saveLicenseStore(store);
 
+  // 1. Dispatch Email Notification immediately to Mohamed Adel & Admin
+  sendActivationNotificationEmail({
+    deviceId: cleanId,
+    branchName: finalBranch,
+    phone: phone || '',
+    notes: notes || '',
+    location: address || (city ? `${city}, ${country}` : ''),
+    city,
+    country,
+  }).catch(e => console.error('Error dispatching activation notification email:', e));
+
+  // 2. Add in-app notification for Master Admin header & modal
+  addAdminNotification({
+    type: 'activation_request',
+    title: `طلب تفعيل جهاز: فرع ${finalBranch}`,
+    message: `طلب فرع (${finalBranch}) تفعيل الجهاز (${cleanId}) - هاتف: ${phone || 'غير مسجل'}${notes ? ` - ملاحظات: ${notes}` : ''}`,
+    deviceId: cleanId,
+    branchName: finalBranch,
+    phone: phone || '',
+    notes: notes || '',
+  });
+
   res.json({
     success: true,
-    message: 'Activation request submitted successfully! Your app will automatically unlock as soon as approved by the Master Admin.',
+    message: 'تم إرسال طلب التفعيل بنجاح وإشعار الإدارة العامة (م/ محمد عادل). سيتم فتح الجهاز تلقائياً فور الاعتماد.',
     requestedBranch: device.requestedBranch,
     requestedAt: device.requestedAt,
     deviceId: cleanId,
@@ -1516,6 +1640,18 @@ app.post('/api/license/admin/approve-activation', (req, res) => {
 
   saveLicenseStore(store);
 
+  // Mark pending notification as approved
+  try {
+    const notifs = getAdminNotifications();
+    notifs.forEach(n => {
+      if (n.deviceId === cleanId) {
+        n.status = 'approved';
+        n.read = true;
+      }
+    });
+    saveAdminNotifications(notifs);
+  } catch {}
+
   res.json({
     success: true,
     message: `تمت الموافقة وتفعيل ترخيص (${finalBranchName}) بنجاح لمدة: ${arabicDuration}!`,
@@ -1551,10 +1687,47 @@ app.post('/api/license/admin/reject-activation', (req, res) => {
   device.activationRequested = false;
   saveLicenseStore(store);
 
+  // Mark pending notification as dismissed
+  try {
+    const notifs = getAdminNotifications();
+    notifs.forEach(n => {
+      if (n.deviceId === cleanId) {
+        n.status = 'dismissed';
+        n.read = true;
+      }
+    });
+    saveAdminNotifications(notifs);
+  } catch {}
+
   res.json({
     success: true,
     message: `تم إلغاء طلب التفعيل للجهاز ${cleanId} بنجاح.`,
   });
+});
+
+// 1.8. Notifications Endpoints for Admin Bell & Header
+app.get('/api/admin/notifications', (req, res) => {
+  const list = getAdminNotifications();
+  const unreadCount = list.filter(n => !n.read && n.status === 'pending').length;
+  res.json({
+    success: true,
+    notifications: list,
+    unreadCount,
+  });
+});
+
+app.post('/api/admin/notifications/mark-read', (req, res) => {
+  const { id } = req.body || {};
+  const list = getAdminNotifications();
+  if (id) {
+    const item = list.find(n => n.id === id);
+    if (item) item.read = true;
+  } else {
+    list.forEach(n => (n.read = true));
+  }
+  saveAdminNotifications(list);
+  const unreadCount = list.filter(n => !n.read && n.status === 'pending').length;
+  res.json({ success: true, unreadCount });
 });
 
 // 2. Activate License Key
@@ -1851,7 +2024,7 @@ app.get('/api/license/admin/devices', (req, res) => {
   });
 
   const licensesList = Object.values(store.licenses).sort((a, b) => b.createdAt - a.createdAt);
-  const pendingRequests = devicesList.filter(d => d.activationRequested && !d.isActivated);
+  const pendingRequests = devicesList.filter(d => Boolean(d.activationRequested));
 
   res.json({
     success: true,
