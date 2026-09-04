@@ -275,6 +275,11 @@ export async function apiCheckLicense(deviceId?: string): Promise<DeviceLicenseI
 export async function apiResetTestTrial(deviceId?: string): Promise<DeviceLicenseInfo> {
   const finalId = deviceId || getOrCreateDeviceId();
   try {
+    localStorage.removeItem(`bk_device_status_${finalId}`);
+    localStorage.removeItem(`bk_master_active_${finalId}`);
+  } catch {}
+
+  try {
     const res = await fetch('/api/license/reset-test-trial', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

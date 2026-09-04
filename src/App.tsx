@@ -34,7 +34,7 @@ import {
   recomputeReconciliationSummary,
 } from './utils/excel';
 import { getStoredUser, apiLogout, apiVerifySession } from './utils/auth';
-import { getOrCreateDeviceId, apiCheckLicense } from './utils/license';
+import { getOrCreateDeviceId, apiCheckLicense, apiResetTestTrial } from './utils/license';
 import { UserProfileModal } from './components/UserProfileModal';
 import { PaywallLockScreen } from './components/PaywallLockScreen';
 import {
@@ -45,7 +45,7 @@ import {
   sampleMonthlyDayFiles,
   sampleMonthlyExcelComparison,
 } from './utils/sampleData';
-import { AlertCircle, Layers, Receipt, FileSpreadsheet, CheckCircle2, CalendarDays, X } from 'lucide-react';
+import { AlertCircle, Layers, Receipt, FileSpreadsheet, CheckCircle2, CalendarDays, X, Clock, RotateCcw, Lock } from 'lucide-react';
 
 export default function App() {
   // Authentication State
@@ -58,6 +58,21 @@ export default function App() {
   // Device Hardware License & Admin Approval State
   const [licenseInfo, setLicenseInfo] = useState<DeviceLicenseInfo | null>(null);
   const [isLicenseLoading, setIsLicenseLoading] = useState<boolean>(true);
+  const [isResettingTrial, setIsResettingTrial] = useState<boolean>(false);
+
+  const handleResetTrial = async () => {
+    setIsResettingTrial(true);
+    try {
+      const res = await apiResetTestTrial();
+      if (res) {
+        setLicenseInfo(res);
+      }
+    } catch {
+      // fallback
+    } finally {
+      setIsResettingTrial(false);
+    }
+  };
 
   // Check hardware device license on mount & periodically
   useEffect(() => {
@@ -841,37 +856,51 @@ export default function App() {
         {/* 5-Minute Free Trial Active Banner */}
         {licenseInfo && licenseInfo.status === 'trial' && (
           <div className="w-full max-w-[98%] 2xl:max-w-[1920px] mx-auto px-3 sm:px-5 lg:px-6 mb-4">
-            <div className="bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-amber-500/15 border-2 border-amber-500/50 rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#EA580C] text-white flex items-center justify-center font-black shrink-0 shadow-xs">
-                  <Clock className="w-5 h-5 animate-pulse" />
+            <div className="bg-gradient-to-r from-amber-500/20 via-orange-500/15 to-amber-500/20 border-2 border-amber-500/60 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-md shadow-amber-500/10">
+              <div className="flex items-center gap-3.5 w-full md:w-auto">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#EA580C] to-amber-600 text-white flex items-center justify-center font-black shrink-0 shadow-md shadow-orange-600/30">
+                  <Clock className="w-6 h-6 animate-pulse" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xs sm:text-sm font-black text-stone-900">
-                      ⏳ الفترة التجريبية المجانية للجهاز (5 دقائق) قيد التشغيل
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <span className="text-sm sm:text-base font-black text-stone-950">
+                      ⏱️ فترة تجريبية مجانية (5 دقائق) قيد التشغيل الآن
                     </span>
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-black bg-stone-900 text-amber-300">
-                      متبقي: {Math.floor(Math.max(0, (licenseInfo.remainingMs || 0)) / 60000)}:{(Math.floor(Math.max(0, (licenseInfo.remainingMs || 0)) / 1000) % 60).toString().padStart(2, '0')} دقيقة
+                    <span className="px-3 py-1 rounded-full text-sm font-mono font-black bg-stone-900 text-amber-300 shadow-xs border border-amber-400/30">
+                      متبقي: {Math.floor(Math.max(0, (licenseInfo.remainingMs || 0)) / 60000).toString().padStart(2, '0')}:{(Math.floor(Math.max(0, (licenseInfo.remainingMs || 0)) / 1000) % 60).toString().padStart(2, '0')} دقيقة
                     </span>
                   </div>
-                  <p className="text-[11px] text-stone-600 mt-0.5">
-                    النظام يعمل بكامل كفاءته خلال فترة الـ 5 دقائق التجريبية. بعد انتهائها سيطلب النظام موافقة الإدارة العامة (م/ محمد عادل).
+                  <p className="text-xs text-stone-700 mt-0.5">
+                    جميع وظائف المطابقة والتقارير متاحة بالكامل. عند انتهاء الـ 5 دقائق سيُقفل النظام تلقائياً لطلب التفعيل من الإدارة.
                   </p>
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setLicenseInfo(prev =>
-                    prev ? { ...prev, status: 'expired', isExpired: true, remainingMs: 0 } : null
-                  );
-                }}
-                className="px-4 py-2 bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-black rounded-xl transition-all shadow-xs shrink-0 cursor-pointer flex items-center gap-1.5"
-              >
-                <span>طلب تفعيل مسبق للإدارة</span>
-              </button>
+              <div className="flex items-center gap-2 w-full md:w-auto justify-end shrink-0 flex-wrap">
+                <button
+                  type="button"
+                  onClick={handleResetTrial}
+                  disabled={isResettingTrial}
+                  className="px-3.5 py-2 bg-white hover:bg-stone-50 text-stone-800 border border-stone-300 text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+                  title="إعادة تعيين الـ 5 دقائق للاختبار مجدداً"
+                >
+                  <RotateCcw className={`w-3.5 h-3.5 text-amber-600 ${isResettingTrial ? 'animate-spin' : ''}`} />
+                  <span>{isResettingTrial ? 'جاري التعيين...' : 'إعادة بدء 5 دقائق'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLicenseInfo(prev =>
+                      prev ? { ...prev, status: 'expired', isExpired: true, remainingMs: 0 } : null
+                    );
+                  }}
+                  className="px-4 py-2 bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-black rounded-xl transition-all shadow-md shadow-orange-600/20 cursor-pointer flex items-center gap-1.5"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>قفل الجهاز وطلب التفعيل الآن</span>
+                </button>
+              </div>
             </div>
           </div>
         )}

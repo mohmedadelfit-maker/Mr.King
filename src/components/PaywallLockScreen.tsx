@@ -3,6 +3,7 @@ import { DeviceLicenseInfo } from '../types';
 import {
   apiCheckLicense,
   apiMasterPinBypass,
+  apiResetTestTrial,
   apiSendActivationRequest,
   getClientLocationInfo,
 } from '../utils/license';
@@ -155,6 +156,22 @@ export const PaywallLockScreen: React.FC<PaywallLockScreenProps> = ({
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const [isResettingTrial, setIsResettingTrial] = useState(false);
+
+  const handleStart5MinTrial = async () => {
+    setIsResettingTrial(true);
+    try {
+      const trialInfo = await apiResetTestTrial(licenseInfo.deviceId);
+      if (trialInfo) {
+        onActivated(trialInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsResettingTrial(false);
     }
   };
 
@@ -417,6 +434,17 @@ export const PaywallLockScreen: React.FC<PaywallLockScreenProps> = ({
 
         {/* Secondary Clean Buttons */}
         <div className="space-y-2">
+          {/* Start / Reset 5-Minute Free Trial */}
+          <button
+            type="button"
+            onClick={handleStart5MinTrial}
+            disabled={isResettingTrial}
+            className="w-full py-3 bg-amber-50 hover:bg-amber-100 text-amber-950 border-2 border-amber-300 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+          >
+            <Clock className={`w-4 h-4 text-amber-600 ${isResettingTrial ? 'animate-spin' : 'animate-pulse'}`} />
+            <span>{isResettingTrial ? 'جاري تفعيل الـ 5 دقائق...' : '⏱️ بدء / تجديد تجربة الـ 5 دقائق المجانية لهذا الجهاز'}</span>
+          </button>
+
           <a
             href={whatsappUrl}
             target="_blank"
