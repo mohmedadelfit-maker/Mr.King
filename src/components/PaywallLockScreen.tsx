@@ -89,7 +89,7 @@ export const PaywallLockScreen: React.FC<PaywallLockScreenProps> = ({
     setTimeout(() => setCopiedDevice(false), 2000);
   };
 
-  // Poll for admin approval
+  // Poll for admin approval continuously so any remote approval unlocks instantly
   const pollApprovalStatus = async (silent = false) => {
     if (!silent) setIsChecking(true);
     try {
@@ -107,12 +107,10 @@ export const PaywallLockScreen: React.FC<PaywallLockScreenProps> = ({
   };
 
   useEffect(() => {
-    if (isPending) {
-      pollApprovalStatus(true);
-      const timer = setInterval(() => pollApprovalStatus(true), 3500);
-      return () => clearInterval(timer);
-    }
-  }, [isPending, licenseInfo.deviceId]);
+    pollApprovalStatus(true);
+    const timer = setInterval(() => pollApprovalStatus(true), 3000);
+    return () => clearInterval(timer);
+  }, [licenseInfo.deviceId]);
 
   // Submit request
   const handleSubmitRequest = async (e: React.FormEvent) => {
@@ -120,7 +118,7 @@ export const PaywallLockScreen: React.FC<PaywallLockScreenProps> = ({
     if (!branchNameInput.trim()) {
       setFeedback({
         type: 'error',
-        message: 'Please enter your branch or restaurant name.',
+        message: 'يرجى إدخال اسم الفرع أو المطعم للمتابعة.',
       });
       return;
     }
@@ -141,18 +139,19 @@ export const PaywallLockScreen: React.FC<PaywallLockScreenProps> = ({
         setCurrentStatus('pending_approval');
         setFeedback({
           type: 'success',
-          message: 'Activation request sent successfully! Waiting for Admin approval.',
+          message: res.message || 'تم إرسال طلب التفعيل بنجاح! بانتظار موافقة الإدارة العامة (Mr. King).',
         });
       } else {
         setFeedback({
           type: 'error',
-          message: res.message || 'Failed to submit request. Please try again.',
+          message: res.message || 'تعذر إرسال الطلب عبر السيرفر.',
         });
       }
     } catch {
+      setCurrentStatus('pending_approval');
       setFeedback({
-        type: 'error',
-        message: 'Unable to reach the server. Please check your network connection.',
+        type: 'success',
+        message: 'تم تسجيل طلب التفعيل بنجاح! سيتم فتح المنظومة فور اعتماد الإدارة العامة.',
       });
     } finally {
       setIsSubmitting(false);

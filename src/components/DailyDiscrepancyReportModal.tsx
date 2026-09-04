@@ -291,31 +291,31 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl sm:text-2xl font-black text-stone-900 tracking-tight">
-                  Daily Discrepancy & Variance Breakdown
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight">
+                  تقرير الفروقات والعجز اليومي (Daily Discrepancy Breakdown)
                 </h2>
                 <span className="bg-red-100 text-red-800 text-xs font-black px-2.5 py-0.5 rounded-full">
-                  Day-by-Day Deficit Analysis
+                  تحليل العجز يوماً بيوم
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-stone-500 font-medium">
-                Pinpoint exactly which days and individual checks generated deficits between Aloha POS and Talabat
+                تحديد دقيق للأيام وأرقام الشيكات التي تسببت في عجز مالي أو فروقات بين كاشير ألوها (Aloha POS) ومنصة طلبات (Talabat)
               </p>
             </div>
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-2 self-end sm:self-center">
+          <div className="flex items-center gap-2 self-end sm:self-center flex-wrap">
             {summary && (
               <button
                 type="button"
                 onClick={() => setIsPdfModalOpen(true)}
                 className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-300 rounded-xl transition-all cursor-pointer shadow-xs"
-                title="Export PDF Report with perfect Arabic font rendering"
+                title="تصدير تقرير PDF بتنسيق عربي كامل"
               >
                 <FileDown className="w-3.5 h-3.5" />
-                <span>Export PDF</span>
+                <span>تصدير PDF</span>
               </button>
             )}
 
@@ -323,20 +323,20 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
               type="button"
               onClick={handleExportExcel}
               className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-xl transition-all cursor-pointer shadow-xs"
-              title="Export Daily Discrepancy Breakdown to Excel"
+              title="تصدير تفاصيل الفروقات اليومية إلى إكسيل"
             >
               <FileSpreadsheet className="w-3.5 h-3.5" />
-              <span>Export Excel</span>
+              <span>تصدير Excel</span>
             </button>
 
             <button
               type="button"
               onClick={handlePrint}
               className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-stone-700 bg-stone-100 hover:bg-stone-200 rounded-xl transition-all cursor-pointer"
-              title="Print Daily Discrepancy Report"
+              title="طباعة التقرير اليومي"
             >
               <Printer className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Print</span>
+              <span>طباعة (Print)</span>
             </button>
 
             <button
@@ -354,53 +354,53 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-stone-800">
             <div className="bg-white p-3 rounded-2xl border border-stone-200 shadow-2xs">
               <span className="text-[11px] font-bold text-stone-500 block mb-0.5">
-                Total Days Audited
+                إجمالي الأيام المدققة (Total Days)
               </span>
               <div className="flex items-baseline gap-1.5">
                 <span className="text-xl font-black font-mono text-stone-900">
                   {overallMetrics.totalDays}
                 </span>
-                <span className="text-xs text-stone-500">Days</span>
+                <span className="text-xs text-stone-500">يوم (Days)</span>
               </div>
             </div>
 
             <div className="bg-red-50/80 p-3 rounded-2xl border border-red-200 shadow-2xs">
               <span className="text-[11px] font-bold text-red-800 block mb-0.5 flex items-center gap-1">
                 <TrendingDown className="w-3.5 h-3.5 text-red-600" />
-                Days with Deficits
+                أيام بها عجز (Days with Deficits)
               </span>
               <div className="flex items-baseline gap-1.5">
                 <span className="text-xl font-black font-mono text-red-700">
                   {overallMetrics.daysWithDeficit}
                 </span>
                 <span className="text-xs font-bold text-red-600">
-                  ({overallMetrics.totalDiscrepantOrders} Checks)
+                  ({overallMetrics.totalDiscrepantOrders} شيك)
                 </span>
               </div>
             </div>
 
             <div className="bg-rose-50/80 p-3 rounded-2xl border border-rose-200 shadow-2xs">
               <span className="text-[11px] font-bold text-rose-800 block mb-0.5">
-                Total Deficit Amount
+                إجمالي قيمة العجز (Total Deficit)
               </span>
               <div className="flex items-baseline gap-1">
                 <span className="text-xl font-black font-mono text-rose-700">
                   -{overallMetrics.totalDeficitEgp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
-                <span className="text-xs font-semibold text-rose-600">EGP</span>
+                <span className="text-xs font-semibold text-rose-600">ج.م (EGP)</span>
               </div>
             </div>
 
             <div className="bg-emerald-50/80 p-3 rounded-2xl border border-emerald-200 shadow-2xs">
               <span className="text-[11px] font-bold text-emerald-800 block mb-0.5 flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                100% Balanced Days
+                أيام متطابقة 100% (Balanced)
               </span>
               <div className="flex items-baseline gap-1.5">
                 <span className="text-xl font-black font-mono text-emerald-700">
                   {overallMetrics.daysBalanced}
                 </span>
-                <span className="text-xs text-emerald-600">Days</span>
+                <span className="text-xs text-emerald-600">يوم (Days)</span>
               </div>
             </div>
           </div>
@@ -418,7 +418,7 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
                   : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
               }`}
             >
-              All Days ({dayGroups.length})
+              جميع الأيام ({dayGroups.length})
             </button>
             <button
               type="button"
@@ -430,7 +430,7 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
               }`}
             >
               <AlertTriangle className="w-3 h-3" />
-              <span>Days with Deficits ({overallMetrics.daysWithDeficit})</span>
+              <span>أيام العجز ({overallMetrics.daysWithDeficit})</span>
             </button>
             <button
               type="button"
@@ -442,7 +442,7 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
               }`}
             >
               <CheckCircle2 className="w-3 h-3" />
-              <span>Balanced Days ({overallMetrics.daysBalanced})</span>
+              <span>أيام متطابقة ({overallMetrics.daysBalanced})</span>
             </button>
           </div>
 
@@ -451,7 +451,7 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
               <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search day, check #, cashier..."
+                placeholder="بحث برقم الشيك، أوردر طلبات، الكاشير..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 className="w-full pl-8 pr-3 py-1.5 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 text-stone-900"
@@ -462,14 +462,14 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
               onClick={expandAll}
               className="text-[11px] font-bold text-stone-500 hover:text-stone-800 underline px-1 cursor-pointer"
             >
-              Expand All
+              توسيع الكل
             </button>
             <button
               type="button"
               onClick={collapseAll}
               className="text-[11px] font-bold text-stone-500 hover:text-stone-800 underline px-1 cursor-pointer"
             >
-              Collapse
+              طي الكل
             </button>
           </div>
         </div>
@@ -541,31 +541,31 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
                           {hasDeficit ? (
                             <span className="inline-flex items-center gap-1 text-xs font-black px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 border border-red-300">
                               <AlertTriangle className="w-3 h-3 text-red-600" />
-                              Deficit: -{group.grossDeficit.toFixed(2)} EGP ({group.discrepantRowsCount} variances)
+                              عجز: -{group.grossDeficit.toFixed(2)} ج.م ({group.discrepantRowsCount} فارق)
                             </span>
                           ) : isBalanced ? (
                             <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
                               <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                              100% Balanced Match
+                              مطابق 100% (Balanced)
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300">
-                              Surplus: +{group.grossSurplus.toFixed(2)} EGP
+                              فائض: +{group.grossSurplus.toFixed(2)} ج.م
                             </span>
                           )}
                         </div>
 
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-stone-500 mt-1">
                           <span>
-                            Aloha: <strong className="font-mono text-stone-800">{group.alohaTotalAmount.toFixed(2)} EGP</strong> ({group.totalAlohaOrders} checks)
+                            ألوها (Aloha): <strong className="font-mono text-stone-800">{group.alohaTotalAmount.toFixed(2)} ج.م</strong> ({group.totalAlohaOrders} شيك)
                           </span>
                           <span>•</span>
                           <span>
-                            Talabat: <strong className="font-mono text-stone-800">{group.talabatTotalAmount.toFixed(2)} EGP</strong> ({group.totalTalabatOrders} orders)
+                            طلبات (Talabat): <strong className="font-mono text-stone-800">{group.talabatTotalAmount.toFixed(2)} ج.م</strong> ({group.totalTalabatOrders} أوردر)
                           </span>
                           <span>•</span>
                           <span>
-                            Cash Drawer: <strong className="font-mono text-stone-800">{group.alohaCashAmount.toFixed(2)} EGP</strong>
+                            الدرج الكاش (Cash): <strong className="font-mono text-stone-800">{group.alohaCashAmount.toFixed(2)} ج.م</strong>
                           </span>
                         </div>
                       </div>
@@ -575,7 +575,7 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
                     <div className="flex items-center gap-4 self-end md:self-center">
                       <div className="text-right">
                         <span className="text-[10px] uppercase tracking-wider font-bold text-stone-400 block">
-                          Day Net Variance
+                          صافي فارق اليوم (Net Variance)
                         </span>
                         <span
                           className={`text-base font-black font-mono ${
@@ -587,8 +587,8 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
                           }`}
                         >
                           {Math.abs(group.netVariance) <= 0.05
-                            ? '0.00 EGP'
-                            : `${group.netVariance > 0 ? '+' : ''}${group.netVariance.toFixed(2)} EGP`}
+                            ? '0.00 ج.م'
+                            : `${group.netVariance > 0 ? '+' : ''}${group.netVariance.toFixed(2)} ج.م`}
                         </span>
                       </div>
 
@@ -605,8 +605,8 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
                         <div className="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-200 text-emerald-900 text-xs flex items-center gap-3">
                           <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                           <div>
-                            <strong className="block font-bold">No Discrepancies on this Day</strong>
-                            <span>All Aloha POS checks on {group.dayLabel} matched Talabat orders with 100% financial precision.</span>
+                            <strong className="block font-bold">لا يوجد أي عجز أو فروقات في هذا اليوم (No Discrepancies)</strong>
+                            <span>جميع شيكات كاشير ألوها ليوم {group.dayLabel} متطابقة بالكامل مع تقرير طلبات بنسبة دقة 100%.</span>
                           </div>
                         </div>
                       ) : (
@@ -614,10 +614,10 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
                           <div className="flex items-center justify-between mb-3">
                             <h4 className="text-xs font-black uppercase tracking-wider text-red-900 flex items-center gap-1.5">
                               <AlertTriangle className="w-3.5 h-3.5 text-red-600" />
-                              Exact Discrepant Checks & Orders on {group.dayLabel} ({group.discrepantRows.length}):
+                              الشيكات والأوردرات التي بها فروقات في {group.dayLabel} ({group.discrepantRows.length} شيك):
                             </h4>
                             <span className="text-[11px] text-stone-500">
-                              Sorted by largest deficit first
+                              مرتبة من الأكبر عجزاً إلى الأقل
                             </span>
                           </div>
 
@@ -625,16 +625,16 @@ export const DailyDiscrepancyReportModal: React.FC<DailyDiscrepancyReportModalPr
                             <table className="w-full text-left text-xs border-collapse">
                               <thead>
                                 <tr className="bg-stone-50 text-stone-700 font-bold border-b border-stone-200">
-                                  <th className="py-2.5 px-3">Check #</th>
-                                  <th className="py-2.5 px-3">Talabat ID</th>
-                                  <th className="py-2.5 px-3">Time & Cashier</th>
-                                  <th className="py-2.5 px-3">Aloha Tender</th>
-                                  <th className="py-2.5 px-3">Talabat Tender</th>
-                                  <th className="py-2.5 px-3 text-right">Aloha (EGP)</th>
-                                  <th className="py-2.5 px-3 text-right">Talabat (EGP)</th>
-                                  <th className="py-2.5 px-3 text-right">Variance (EGP)</th>
-                                  <th className="py-2.5 px-3">Variance Cause / Note</th>
-                                  <th className="py-2.5 px-2 text-center">Action</th>
+                                  <th className="py-2.5 px-3">رقم الشيك (Check #)</th>
+                                  <th className="py-2.5 px-3">أوردر طلبات (Talabat ID)</th>
+                                  <th className="py-2.5 px-3">الوقت والكاشير (Time & Host)</th>
+                                  <th className="py-2.5 px-3">دفع ألوها (Aloha Tender)</th>
+                                  <th className="py-2.5 px-3">دفع طلبات (Talabat Tender)</th>
+                                  <th className="py-2.5 px-3 text-right">ألوها (Aloha EGP)</th>
+                                  <th className="py-2.5 px-3 text-right">طلبات (Talabat EGP)</th>
+                                  <th className="py-2.5 px-3 text-right">الفارق (Variance)</th>
+                                  <th className="py-2.5 px-3">سبب الفارق والملاحظة (Cause / Note)</th>
+                                  <th className="py-2.5 px-2 text-center">إجراء (Action)</th>
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-stone-100">

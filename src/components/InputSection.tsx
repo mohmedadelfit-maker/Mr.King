@@ -15,7 +15,6 @@ import {
   X,
   AlertCircle,
   HelpCircle,
-  Camera,
   Table as TableIcon,
   Link2,
   ExternalLink,
@@ -23,7 +22,6 @@ import {
 } from 'lucide-react';
 import { BurgerKingLogo, TalabatLogo } from './BrandLogos';
 import { AuditMode, ComparisonRow, CrossReferenceEntry, DailyFileEntry } from '../types';
-import { AiImageReconciler } from './AiImageReconciler';
 import { CrossReferenceSection } from './CrossReferenceSection';
 
 interface InputSectionProps {
@@ -168,76 +166,6 @@ export const InputSection: React.FC<InputSectionProps> = ({
     setIsPasteModalOpen(false);
   };
 
-  // If AI Image mode is active, render the dedicated AI OCR Reconciler
-  if (auditMode === 'ai_image') {
-    return (
-      <div className="space-y-4 mb-6">
-        {/* Top Auditing Mode Selector Tabs */}
-        <div className="bg-white rounded-2xl p-4 shadow-xs border border-stone-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-stone-100/90 rounded-2xl border border-stone-200">
-            <button
-              type="button"
-              id="audit-mode-ai-btn"
-              onClick={() => setAuditMode('ai_image')}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-500 text-white shadow-xs cursor-pointer"
-            >
-              <Camera className="w-4 h-4 text-white" />
-              <span>AI OCR Report Comparison</span>
-            </button>
-
-            <button
-              type="button"
-              id="audit-mode-daily-btn"
-              onClick={() => setAuditMode('daily')}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-stone-600 hover:text-stone-900 hover:bg-stone-200/50 transition-all cursor-pointer"
-            >
-              <Calendar className="w-4 h-4 text-stone-500" />
-              <span>Daily Audit (File/Text)</span>
-            </button>
-
-            <button
-              type="button"
-              id="audit-mode-monthly-btn"
-              onClick={() => setAuditMode('monthly')}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-stone-600 hover:text-stone-900 hover:bg-stone-200/50 transition-all cursor-pointer"
-            >
-              <CalendarDays className="w-4 h-4 text-stone-500" />
-              <span>Monthly Batch Audit</span>
-            </button>
-
-            <button
-              type="button"
-              id="audit-mode-crossref-btn"
-              onClick={() => setAuditMode('cross_reference')}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-emerald-800 hover:bg-emerald-100/80 transition-all cursor-pointer"
-            >
-              <TableIcon className="w-4 h-4 text-emerald-600" />
-              <span>3-Way Cross Reference Form ({crossReferenceEntries.length})</span>
-            </button>
-          </div>
-
-          <button
-            type="button"
-            onClick={onLoadSample}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold text-amber-900 bg-amber-50 hover:bg-amber-100/80 border border-amber-200/70 rounded-xl transition-all cursor-pointer shadow-2xs self-end sm:self-auto"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            <span>Load Sample Data</span>
-          </button>
-        </div>
-
-        {/* AI OCR Image Reconciler Component */}
-        <AiImageReconciler
-          onReconciliationComplete={rows => {
-            if (onAiReconciliationComplete) {
-              onAiReconciliationComplete(rows);
-            }
-          }}
-        />
-      </div>
-    );
-  }
-
   // If Cross-Reference mode is active, render the dedicated 3-Way Cross-Reference Section
   if (auditMode === 'cross_reference') {
     return (
@@ -272,17 +200,7 @@ export const InputSection: React.FC<InputSectionProps> = ({
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-stone-600 hover:text-stone-900 hover:bg-stone-200/50 transition-all cursor-pointer"
             >
               <CalendarDays className="w-4 h-4 text-stone-500" />
-              <span>Monthly Batch Audit</span>
-            </button>
-
-            <button
-              type="button"
-              id="audit-mode-ai-tab-btn"
-              onClick={() => setAuditMode('ai_image')}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-amber-900 bg-amber-100/80 hover:bg-amber-200/80 border border-amber-300 transition-all cursor-pointer"
-            >
-              <Camera className="w-4 h-4 text-amber-700" />
-              <span>AI OCR Report Comparison</span>
+              <span>التدقيق الشهري المجمع (Monthly Batch)</span>
             </button>
           </div>
 
@@ -292,7 +210,7 @@ export const InputSection: React.FC<InputSectionProps> = ({
             className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold text-emerald-900 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200/70 rounded-xl transition-all cursor-pointer shadow-2xs self-end sm:self-auto"
           >
             <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Load Sample Cross Reference</span>
+            <span>تحميل بيانات تجريبية (Sample Data)</span>
           </button>
         </div>
 
@@ -328,7 +246,7 @@ export const InputSection: React.FC<InputSectionProps> = ({
             }`}
           >
             <Calendar className={`w-4 h-4 ${auditMode === 'daily' ? 'text-[#D71920]' : 'text-stone-500'}`} />
-            <span>Daily Audit</span>
+            <span>التدقيق اليومي (Daily Audit)</span>
           </button>
 
           <button
@@ -342,7 +260,7 @@ export const InputSection: React.FC<InputSectionProps> = ({
             }`}
           >
             <CalendarDays className={`w-4 h-4 ${auditMode === 'monthly' ? 'text-blue-600' : 'text-stone-500'}`} />
-            <span>Monthly Batch Audit</span>
+            <span>التدقيق الشهري (Monthly Batch)</span>
             {dailyFiles.length > 0 && auditMode === 'monthly' && (
               <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-100 text-blue-800">
                 {dailyFiles.length} Days
@@ -357,22 +275,12 @@ export const InputSection: React.FC<InputSectionProps> = ({
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100/90 border border-emerald-200 transition-all cursor-pointer"
           >
             <TableIcon className="w-4 h-4 text-emerald-600" />
-            <span>3-Way Cross Reference Form</span>
+            <span>نموذج المطابقة الثلاثية (3-Way Cross Reference)</span>
             {crossReferenceEntries.length > 0 && (
               <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-200 text-emerald-900">
                 {crossReferenceEntries.length} entries
               </span>
             )}
-          </button>
-
-          <button
-            type="button"
-            id="audit-mode-ai-tab-btn"
-            onClick={() => setAuditMode('ai_image')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-amber-900 bg-amber-50 hover:bg-amber-100/80 border border-amber-200 transition-all cursor-pointer"
-          >
-            <Camera className="w-4 h-4 text-amber-700" />
-            <span>Smart OCR Scanner</span>
           </button>
         </div>
 

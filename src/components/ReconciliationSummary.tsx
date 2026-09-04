@@ -100,15 +100,15 @@ export const ReconciliationSummaryView: React.FC<ReconciliationSummaryProps> = (
             <div className="flex items-center gap-2 flex-wrap">
               <span className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-2xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" />
-                Financial Audit Quality Index
+                مؤشر جودة التدقيق المالي (Financial Audit Quality Index)
               </span>
               <span className="text-xs text-slate-300 font-mono bg-white/10 px-2.5 py-0.5 rounded-lg border border-white/10">
-                {summary.matchCount} of {summary.totalEvaluatedCount} checks 100% matched
+                مطابقة {summary.matchCount} من أصل {summary.totalEvaluatedCount} شيك بنسبة 100%
               </span>
             </div>
             <div className="flex items-baseline gap-3 flex-wrap">
               <h3 className="text-lg sm:text-xl font-black text-white">
-                Reconciliation Accuracy Rate:
+                نسبة دقة المطابقة المالية (Accuracy Rate):
               </h3>
               <span
                 className={`font-mono text-3xl sm:text-4xl font-black tracking-tight drop-shadow-sm ${
@@ -123,7 +123,7 @@ export const ReconciliationSummaryView: React.FC<ReconciliationSummaryProps> = (
               </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-              Comparing Talabat Benchmark (<strong className="text-amber-300 font-mono">{formatCurrency(summary.talabatSourceTotal)} EGP</strong>) against Aloha POS actual cash register (<strong className="text-indigo-200 font-mono">{formatCurrency(summary.alohaSourceTotal)} EGP</strong>).
+              مقارنة إجمالي تقرير طلبات المعياري (<strong className="text-amber-300 font-mono">{formatCurrency(summary.talabatSourceTotal)} ج.م</strong>) مع مبيعات كاشير ألوها المسجلة فعلياً (<strong className="text-indigo-200 font-mono">{formatCurrency(summary.alohaSourceTotal)} ج.م</strong>).
             </p>
           </div>
 
@@ -135,20 +135,20 @@ export const ReconciliationSummaryView: React.FC<ReconciliationSummaryProps> = (
                 className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-stone-950 font-black text-xs sm:text-sm rounded-xl transition-all shadow-md active:scale-95 cursor-pointer"
               >
                 <CalendarDays className="w-4 h-4" />
-                <span>Daily Discrepancy Breakdown</span>
+                <span>تقرير الفروقات والعجز اليومي (Daily Breakdown)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             )}
 
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/15 text-center min-w-[115px] shadow-sm">
-              <span className="text-[11px] text-slate-300 block font-semibold">Matched Checks</span>
+              <span className="text-[11px] text-slate-300 block font-semibold">شيكات مطابقة (Matched)</span>
               <span className="text-2xl font-black text-emerald-400 font-mono tracking-tight">{summary.matchCount}</span>
             </div>
             {summary.assistantResolvedCount !== undefined && summary.assistantResolvedCount > 0 && (
               <div className="bg-amber-500/20 backdrop-blur-md rounded-xl p-3 border border-amber-400/30 text-center min-w-[115px] shadow-sm">
                 <span className="text-[11px] text-amber-300 block font-bold flex items-center justify-center gap-1">
                   <Sparkles className="w-3 h-3 text-amber-400" />
-                  Assistant
+                  المساعد الذكي
                 </span>
                 <span className="text-2xl font-black text-amber-300 font-mono tracking-tight">
                   {summary.assistantResolvedCount}
@@ -156,7 +156,7 @@ export const ReconciliationSummaryView: React.FC<ReconciliationSummaryProps> = (
               </div>
             )}
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/15 text-center min-w-[115px] shadow-sm">
-              <span className="text-[11px] text-slate-300 block font-semibold">Total Variances</span>
+              <span className="text-[11px] text-slate-300 block font-semibold">شيكات بها فروقات (Variances)</span>
               <span className="text-2xl font-black text-rose-400 font-mono tracking-tight">
                 {summary.deficitCount + summary.surplusCount + summary.methodMismatchCount + summary.missingInTalabatCount + summary.missingInAlohaCount}
               </span>

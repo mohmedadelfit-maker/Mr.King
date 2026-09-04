@@ -283,16 +283,16 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
       });
 
       if (res.success) {
-        setSuccessMessage(res.message || 'Device registered and activated successfully!');
+        setSuccessMessage(res.message || 'تم اعتماد وتفعيل الجهاز بنجاح! Device activated successfully.');
         setManualDeviceId('');
         setManualBranchName('');
         fetchDevicesAndApprovals();
-        setTimeout(() => setSuccessMessage(''), 5000);
+        setTimeout(() => setSuccessMessage(''), 6000);
       } else {
-        setErrorMessage(res.message || 'Failed to activate device.');
+        setErrorMessage(res.message || res.error || 'تعذر تفعيل الجهاز. يرجى المحاولة مجدداً.');
       }
-    } catch {
-      setErrorMessage('Unable to communicate with the license server.');
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'تعذر الاتصال بسيرفر التراخيص المركزي.');
     } finally {
       setIsManualSubmitting(false);
     }

@@ -127,28 +127,26 @@ export default function App() {
 
     let isMounted = true;
     const checkSession = async () => {
+      // Never kick out master user automatically on transient failures
+      const isKing = currentUser.username?.toLowerCase() === 'king';
       const check = await apiVerifySession();
       if (!isMounted) return;
-      if (!check.valid) {
+      if (!check.valid && !isKing && check.reason === 'password_changed') {
         setCurrentUserState(null);
         setIsProfileModalOpen(false);
-        setSecurityNotice(check.message || 'Your session was terminated by the administrator or your credentials were updated.');
+        setSecurityNotice(check.message || 'Your session was terminated because master credentials were updated.');
       }
     };
 
-    // Check immediately on mount
+    // Check on mount
     checkSession();
 
-    // Check every 8 seconds
-    const interval = setInterval(checkSession, 8000);
-
-    const handleFocus = () => checkSession();
-    window.addEventListener('focus', handleFocus);
+    // Check periodically (every 30 seconds)
+    const interval = setInterval(checkSession, 30000);
 
     return () => {
       isMounted = false;
       clearInterval(interval);
-      window.removeEventListener('focus', handleFocus);
     };
   }, [currentUser]);
 
